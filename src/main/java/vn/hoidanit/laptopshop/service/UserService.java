@@ -36,4 +36,8 @@ public class UserService {
         arrUsers = this.userRepository.findAllByEmail(email);
         return arrUsers;
     }
+
+    public User getUserById(long id) {
+        return this.userRepository.findById(id);
+    }
 }
