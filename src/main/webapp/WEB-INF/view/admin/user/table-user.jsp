@@ -38,26 +38,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>
-                                            <a href="" class="btn btn-success">View</a>
-                                            <a href="" class="btn btn-warning mx-2">Update</a>
-                                            <a href="" class="btn btn-danger">Create</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>
-                                            <a href="" class="btn btn-success">View</a>
-                                            <a href="" class="btn btn-warning mx-2">Update</a>
-                                            <a href="" class="btn btn-danger">Create</a>
-                                        </td>
-                                    </tr>
+                                    <c:forEach var="user" items="${users1}">
+                                        <tr>
+                                            <th scope="row">${user.id}</th>
+                                            <td>${user.email}</td>
+                                            <td>${user.fullName}</td>
+                                            <td>
+                                                <a href="" class="btn btn-success">View</a>
+                                                <a href="" class="btn btn-warning mx-2">Update</a>
+                                                <a href="" class="btn btn-danger">Create</a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>
