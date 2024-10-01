@@ -27,13 +27,13 @@ public class UserService {
 
     public List<User> getAllUsers() {
         List<User> arrUsers;
-        arrUsers = userRepository.findAll();
+        arrUsers = this.userRepository.findAll();
         return arrUsers;
     }
 
     public List<User> getAllUsersByEmail(String email) {
         List<User> arrUsers;
-        arrUsers = userRepository.findAllByEmail(email);
+        arrUsers = this.userRepository.findAllByEmail(email);
         return arrUsers;
     }
 }
