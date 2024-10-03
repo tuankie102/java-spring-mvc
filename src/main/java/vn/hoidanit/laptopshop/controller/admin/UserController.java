@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.ServletContext;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.UserRepository;
+import vn.hoidanit.laptopshop.service.UploadFileService;
 import vn.hoidanit.laptopshop.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,12 +30,12 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final ServletContext servletContext;
+    private final UploadFileService uploadFileService;
 
-    public UserController(UserService userService, UserRepository userRepository, ServletContext servletContext) {
+    public UserController(UserService userService, UserRepository userRepository, UploadFileService uploadFileService) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.servletContext = servletContext;
+        this.uploadFileService = uploadFileService;
     }
 
     // MVC: view gửi rq tới controller xong ctrl yêu cầu lấy data từ model xong
@@ -72,24 +73,7 @@ public class UserController {
     @PostMapping(value = "/admin/user/create")
     public String createUserPage(Model model, @ModelAttribute("newUser") User tuankiet,
             @RequestParam("avatarFile") MultipartFile file) {
-        try {
-            byte[] bytes = file.getBytes();
-
-            String rootPath = this.servletContext.getRealPath("/resources/images");
-            File dir = new File(rootPath + File.separator + "avatar");
-            if (!dir.exists())
-                dir.mkdirs();
-            // Create the file on server
-            File serverFile = new File(dir.getAbsolutePath() + File.separator +
-                    +System.currentTimeMillis() + "-" + file.getOriginalFilename());
-            BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(serverFile));
-            stream.write(bytes);
-            stream.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        String avatar = this.uploadFileService.handleSaveUploadFile(file, "avatar");
 
         // this.userService.handleSaveUser(tuankiet);
         return "redirect:/admin/user";
