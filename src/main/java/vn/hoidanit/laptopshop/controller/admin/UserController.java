@@ -1,5 +1,9 @@
-package vn.hoidanit.laptopshop.controller;
+package vn.hoidanit.laptopshop.controller.admin;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -9,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.ServletContext;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.UserRepository;
 import vn.hoidanit.laptopshop.service.UserService;
@@ -23,10 +29,12 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final ServletContext servletContext;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, UserRepository userRepository, ServletContext servletContext) {
         this.userService = userService;
         this.userRepository = userRepository;
+        this.servletContext = servletContext;
     }
 
     // MVC: view gửi rq tới controller xong ctrl yêu cầu lấy data từ model xong
@@ -61,10 +69,29 @@ public class UserController {
         return "/admin/user/create";
     }
 
-    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
-    public String createUserPage(Model model, @ModelAttribute("newUser") User tuankiet) {
-        System.out.println("run here" + tuankiet);
-        this.userService.handleSaveUser(tuankiet);
+    @PostMapping(value = "/admin/user/create")
+    public String createUserPage(Model model, @ModelAttribute("newUser") User tuankiet,
+            @RequestParam("avatarFile") MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+
+            String rootPath = this.servletContext.getRealPath("/resources/images");
+            File dir = new File(rootPath + File.separator + "avatar");
+            if (!dir.exists())
+                dir.mkdirs();
+            // Create the file on server
+            File serverFile = new File(dir.getAbsolutePath() + File.separator +
+                    +System.currentTimeMillis() + "-" + file.getOriginalFilename());
+            BufferedOutputStream stream = new BufferedOutputStream(
+                    new FileOutputStream(serverFile));
+            stream.write(bytes);
+            stream.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // this.userService.handleSaveUser(tuankiet);
         return "redirect:/admin/user";
     }
 
