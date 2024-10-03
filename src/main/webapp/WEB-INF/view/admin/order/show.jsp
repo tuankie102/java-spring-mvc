@@ -11,7 +11,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content="Tuấn Kiệt - Dự án laptopshop" />
                 <meta name="author" content="Tuấn Kiệt" />
-                <title>User Page</title>
+                <title>Order Page</title>
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
@@ -23,32 +23,13 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage Users</h1>
+                                <h1 class="mt-4">Manage Orders</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item active"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Users</li>
+                                    <li class="breadcrumb-item active">Orders</li>
                                 </ol>
-                                <div class="mt-5">
-                                    <div class="row">
-                                        <div class="col-12  mx-auto">
-                                            <h3>Delete user with id = ${id}</h3>
-                                            <hr />
-                                            <form:form method="post" action="/admin/user/delete"
-                                                modelAttribute="newUser">
-                                                <div class="mb-3" style="display: none;">
-                                                    <label class="form-label">ID</label>
-                                                    <form:input value="${id}" type="text" class="form-control"
-                                                        path="id" />
-                                                </div>
-
-                                                <div class="alert alert-danger" role="alert">
-                                                    Are you sure to delete this user?
-                                                </div>
-
-                                                <button type="submit" class="btn btn-danger">Confirm</button>
-                                            </form:form>
-                                        </div>
-                                    </div>
+                                <div>
+                                    Order
                                 </div>
                             </div>
                         </main>
