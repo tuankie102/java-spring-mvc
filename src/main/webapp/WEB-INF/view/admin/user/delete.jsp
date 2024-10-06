@@ -44,8 +44,9 @@
                                                 <div class="alert alert-danger" role="alert">
                                                     Are you sure to delete this user?
                                                 </div>
-
+                                                <a href="/admin/user" class="btn btn-success">Back</a>
                                                 <button type="submit" class="btn btn-danger">Confirm</button>
+
                                             </form:form>
                                         </div>
                                     </div>

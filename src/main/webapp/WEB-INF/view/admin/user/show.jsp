@@ -42,6 +42,7 @@
                                                     <tr>
                                                         <th scope="col">ID</th>
                                                         <th scope="col">Email</th>
+                                                        <th scope="col">Role</th>
                                                         <th scope="col">Full Name</th>
                                                         <th scope="col">Action</th>
                                                     </tr>
@@ -51,6 +52,7 @@
                                                         <tr>
                                                             <th scope="row">${user.id}</th>
                                                             <td>${user.email}</td>
+                                                            <td>${user.role.name}</td>
                                                             <td>${user.fullName}</td>
                                                             <td>
                                                                 <a href="/admin/user/${user.id}"

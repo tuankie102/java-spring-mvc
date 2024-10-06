@@ -1,27 +1,21 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.ServletContext;
 import vn.hoidanit.laptopshop.domain.User;
-import vn.hoidanit.laptopshop.repository.UserRepository;
 import vn.hoidanit.laptopshop.service.UploadFileService;
 import vn.hoidanit.laptopshop.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,12 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final UploadFileService uploadFileService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserRepository userRepository, UploadFileService uploadFileService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder,
+            UploadFileService uploadFileService) {
         this.userService = userService;
-        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.uploadFileService = uploadFileService;
     }
 
@@ -74,8 +69,12 @@ public class UserController {
     public String createUserPage(Model model, @ModelAttribute("newUser") User tuankiet,
             @RequestParam("avatarFile") MultipartFile file) {
         String avatar = this.uploadFileService.handleSaveUploadFile(file, "avatar");
+        String hashPassword = this.passwordEncoder.encode(tuankiet.getPassword());
+        tuankiet.setAvata(avatar);
+        tuankiet.setPassword(hashPassword);
+        tuankiet.setRole(this.userService.getRoleByName(tuankiet.getRole().getName()));
 
-        // this.userService.handleSaveUser(tuankiet);
+        this.userService.handleSaveUser(tuankiet);
         return "redirect:/admin/user";
     }
 
@@ -87,13 +86,17 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/update")
-    public String postUpdateUser(Model model, @ModelAttribute("newUser") User tuankiet) {
+    public String postUpdateUser(Model model, @ModelAttribute("newUser") User tuankiet,
+            @RequestParam("avatarFile") MultipartFile file) {
         User currentUser = this.userService.getUserById(tuankiet.getId());
+        String avatar = this.uploadFileService.handleSaveUploadFile(file, "avatar");
         model.addAttribute("newUser", currentUser);
         if (currentUser != null) {
             currentUser.setFullName(tuankiet.getFullName());
             currentUser.setAddress(tuankiet.getAddress());
             currentUser.setPhone(tuankiet.getPhone());
+            currentUser.setRole(this.userService.getRoleByName(tuankiet.getRole().getName()));
+            currentUser.setAvata(avatar);
             this.userService.handleSaveUser(currentUser);
         }
         return "redirect:/admin/user";

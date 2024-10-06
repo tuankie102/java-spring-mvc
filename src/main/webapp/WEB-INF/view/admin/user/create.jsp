@@ -86,6 +86,7 @@
                                                         id="avatarPreview">
                                                 </div>
                                                 <div class="col-12 mb-5">
+                                                    <a href="/admin/user" class="btn btn-success">Back</a>
                                                     <button type="submit" class="btn btn-primary">Create</button>
                                                 </div>
                                             </form:form>
