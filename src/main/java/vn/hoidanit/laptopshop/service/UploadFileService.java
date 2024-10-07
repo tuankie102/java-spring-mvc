@@ -19,6 +19,9 @@ public class UploadFileService {
     }
 
     public String handleSaveUploadFile(MultipartFile file, String folderName) {
+        if (file.isEmpty()) {
+            return "";
+        }
         String finalName = "";
         try {
             byte[] bytes = file.getBytes();
