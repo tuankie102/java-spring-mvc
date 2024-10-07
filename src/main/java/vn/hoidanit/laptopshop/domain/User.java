@@ -10,6 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -18,12 +21,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull
+    @Email
     private String email;
+
+    @NotNull
+    @Min(2)
     private String password;
+
+    @NotNull
+    @Min(3)
     private String fullName;
+
     private String address;
     private String phone;
-    private String avata;
+    private String avatar;
 
     // roleId
     @ManyToOne
@@ -52,14 +64,14 @@ public class User {
         this.orders = orders;
     }
 
-    public User(long id, String email, String password, String fullName, String address, String phone, String avata) {
+    public User(long id, String email, String password, String fullName, String address, String phone, String avatar) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.address = address;
         this.phone = phone;
-        this.avata = avata;
+        this.avatar = avatar;
     }
 
     public long getId() {
@@ -110,18 +122,18 @@ public class User {
         this.phone = phone;
     }
 
-    public String getAvata() {
-        return avata;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvata(String avata) {
-        this.avata = avata;
+    public void setAvatar(String avata) {
+        this.avatar = avata;
     }
 
     @Override
     public String toString() {
         return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
-                + ", address=" + address + ", phone=" + phone + ", avarta=" + avata + "]";
+                + ", address=" + address + ", phone=" + phone + ", avarta=" + avatar + "]";
     }
 
 }
