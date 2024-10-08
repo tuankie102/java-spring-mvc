@@ -38,7 +38,8 @@
                                 <h1 class="mt-4">Manage Users</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item active"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Users</li>
+                                    <li class="breadcrumb-item active"><a href="/admin/user">Users</a></li>
+                                    <li class="breadcrumb-item active">Create</li>
                                 </ol>
                                 <div class="mt-5">
                                     <div class="row">
@@ -103,7 +104,6 @@
                                                         id="avatarPreview">
                                                 </div>
                                                 <div class="col-12 mb-5">
-                                                    <a href="/admin/user" class="btn btn-success">Back</a>
                                                     <button type="submit" class="btn btn-primary">Create</button>
                                                 </div>
                                             </form:form>

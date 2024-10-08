@@ -1,10 +1,10 @@
 package vn.hoidanit.laptopshop.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import vn.hoidanit.laptopshop.domain.Role;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
 
@@ -27,7 +27,7 @@ public class ProductService {
         return arrProducts;
     }
 
-    public Product getProductById(long id) {
+    public Optional<Product> getProductById(long id) {
         return this.ProductRepository.findById(id);
     }
 

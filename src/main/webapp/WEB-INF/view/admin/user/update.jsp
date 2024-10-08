@@ -18,6 +18,12 @@
                 <script>
                     $(document).ready(() => {
                         const avatarFile = $("#avatarFile");
+                        const orgImage = "${avatarFile}";
+                        if (orgImage) {
+                            const urlImage = "/images/avatar/" + orgImage;
+                            $("#avatarPreview").attr("src", urlImage);
+                            $("#avatarPreview").css({ "display": "block" });
+                        }
                         avatarFile.change(function (e) {
                             const imgURL = URL.createObjectURL(e.target.files[0]);
                             $("#avatarPreview").attr("src", imgURL);
@@ -37,7 +43,8 @@
                                 <h1 class="mt-4">Manage Users</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item active"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Users</li>
+                                    <li class="breadcrumb-item active"><a href="/admin/user">Users</a></li>
+                                    <li class="breadcrumb-item active">Update</li>
                                 </ol>
                                 <div class="mt-5">
                                     <div class="row">
@@ -54,7 +61,7 @@
                                                 <div class="mb-3">
                                                     <label for="txtEmail" class="form-label">Email</label>
                                                     <form:input type="email" class="form-control" path="email"
-                                                        disabled="true" />
+                                                        value="${emailUser}" disabled="true" />
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Role:</label>
@@ -63,10 +70,14 @@
                                                         <form:option value="USER">USER</form:option>
                                                     </form:select>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label for="txtFullName" class="form-label">Full Name</label>
-                                                    <form:input type="text" class="form-control" path="fullName" />
-                                                </div>
+                                                <c:set var="errorFullName">
+                                                    <form:errors path="fullName" cssClass="invalid-feedback" />
+                                                </c:set>
+                                                <label for="txtFullName" class="form-label">Full Name</label>
+                                                <form:input type="text"
+                                                    class="form-control ${not empty errorFullName ? 'is-invalid':''}"
+                                                    path="fullName" />
+                                                ${errorFullName}
                                                 <div class="mb-3">
                                                     <label for="txtAddress" class="form-label">Address</label>
                                                     <form:input type="text" class="form-control" path="address" />
@@ -84,7 +95,6 @@
                                                     <img style="max-height: 250px; display: none;" alt="avatar preview"
                                                         id="avatarPreview">
                                                 </div>
-                                                <a href="/admin/user" class="btn btn-success">Back</a>
                                                 <button type="submit" class="btn btn-warning">Update</button>
                                             </form:form>
                                         </div>

@@ -96,21 +96,30 @@ public class UserController {
     public String getUpdatePage(Model model, @PathVariable long id) {
         User currentUser = this.userService.getUserById(id);
         model.addAttribute("newUser", currentUser);
+        model.addAttribute("emailUser", currentUser.getEmail());
+        model.addAttribute("avatarFile", currentUser.getAvatar());
         return "/admin/user/update";
     }
 
     @PostMapping("/admin/user/update")
-    public String postUpdateUser(Model model, @ModelAttribute("newUser") User tuankiet,
+    public String postUpdateUser(Model model, @ModelAttribute("newUser") @Valid User tuankiet,
+            BindingResult newUserBindingResult,
             @RequestParam("avatarFile") MultipartFile file) {
         User currentUser = this.userService.getUserById(tuankiet.getId());
-        String avatar = this.uploadFileService.handleSaveUploadFile(file, "avatar");
-        model.addAttribute("newUser", currentUser);
+        model.addAttribute("emailUser", currentUser.getEmail());
+        model.addAttribute("avatarFile", currentUser.getAvatar());
+        if (newUserBindingResult.hasErrors()) {
+            return "/admin/user/update";
+        }
         if (currentUser != null) {
+            if (file != null) {
+                String avatar = this.uploadFileService.handleSaveUploadFile(file, "avatar");
+                currentUser.setAvatar(avatar);
+            }
             currentUser.setFullName(tuankiet.getFullName());
             currentUser.setAddress(tuankiet.getAddress());
             currentUser.setPhone(tuankiet.getPhone());
             currentUser.setRole(this.userService.getRoleByName(tuankiet.getRole().getName()));
-            currentUser.setAvatar(avatar);
             this.userService.handleSaveUser(currentUser);
         }
         return "redirect:/admin/user";

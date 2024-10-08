@@ -18,6 +18,12 @@
                 <script>
                     $(document).ready(() => {
                         const productFile = $("#productFile");
+                        const orgImage = "${productImgOlder}";
+                        if (orgImage) {
+                            const urlImage = "/images/product/" + orgImage;
+                            $("#productPreview").attr("src", urlImage);
+                            $("#productPreview").css({ "display": "block" });
+                        }
                         productFile.change(function (e) {
                             const imgURL = URL.createObjectURL(e.target.files[0]);
                             $("#productPreview").attr("src", imgURL);
@@ -25,7 +31,6 @@
                         });
                     });
                 </script>
-
             </head>
 
             <body class="sb-nav-fixed">
@@ -38,15 +43,16 @@
                                 <h1 class="mt-4">Manage Products</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item active"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Products</li>
+                                    <li class="breadcrumb-item active"><a href="/admin/product">Products</a></li>
+                                    <li class="breadcrumb-item active">Update</li>
                                 </ol>
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12  mx-auto">
-                                            <h3>Create a product</h3>
+                                            <h3>Update a product</h3>
                                             <hr />
-                                            <form:form method="post" action="/admin/product/create"
-                                                modelAttribute="newProduct" class="row" enctype="multipart/form-data">
+                                            <form:form method="post" action="/admin/product/update"
+                                                modelAttribute="newProduct" enctype="multipart/form-data" class="row">
                                                 <c:set var="errorName">
                                                     <form:errors path="name" cssClass="invalid-feedback" />
                                                 </c:set>
@@ -62,6 +68,12 @@
                                                 <c:set var="errorQuantity">
                                                     <form:errors path="quantity" cssClass="invalid-feedback" />
                                                 </c:set>
+
+                                                <div class="mb-3" style="display: none;">
+                                                    <label class="form-label">ID</label>
+                                                    <form:input type="text" class="form-control" path="id" />
+                                                </div>
+
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Name</label>
                                                     <form:input type="text"
@@ -102,16 +114,16 @@
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Factory:</label>
                                                     <form:select class="form-select" path="factory">
-                                                        <form:option value="1">Apple (MacBook)</form:option>
-                                                        <form:option value="2">Window</form:option>
+                                                        <form:option value="Apple">Apple (MacBook)</form:option>
+                                                        <form:option value="Window">Window</form:option>
                                                     </form:select>
                                                 </div>
 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Target:</label>
                                                     <form:select class="form-select" path="target">
-                                                        <form:option value="1">Gaming</form:option>
-                                                        <form:option value="2">Office</form:option>
+                                                        <form:option value="Gaming">Gaming</form:option>
+                                                        <form:option value="Office">Office</form:option>
                                                     </form:select>
                                                 </div>
 
@@ -126,7 +138,7 @@
                                                         alt="product image preview" id="productPreview">
                                                 </div>
                                                 <div class="col-12 mb-5">
-                                                    <button type="submit" class="btn btn-primary">Create</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
                                                 </div>
                                             </form:form>
                                         </div>

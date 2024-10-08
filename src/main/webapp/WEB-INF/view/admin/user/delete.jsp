@@ -26,7 +26,8 @@
                                 <h1 class="mt-4">Manage Users</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item active"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Users</li>
+                                    <li class="breadcrumb-item active"><a href="/admin/user">Users</a></li>
+                                    <li class="breadcrumb-item active">Delete</li>
                                 </ol>
                                 <div class="mt-5">
                                     <div class="row">
@@ -44,7 +45,6 @@
                                                 <div class="alert alert-danger" role="alert">
                                                     Are you sure to delete this user?
                                                 </div>
-                                                <a href="/admin/user" class="btn btn-success">Back</a>
                                                 <button type="submit" class="btn btn-danger">Confirm</button>
 
                                             </form:form>
