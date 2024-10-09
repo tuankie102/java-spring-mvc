@@ -52,20 +52,20 @@ public class UserController {
     public String getUserPage(Model model) {
         List<User> users = this.userService.getAllUsers();
         model.addAttribute("users1", users);
-        return "/admin/user/show";
+        return "admin/user/show";
     }
 
     @RequestMapping("/admin/user/{id}")
     public String getUserDetailPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
         model.addAttribute("user", user);
-        return "/admin/user/detail";
+        return "admin/user/detail";
     }
 
     @RequestMapping("/admin/user/create")
     public String getCreatePage(Model model) {
         model.addAttribute("newUser", new User());
-        return "/admin/user/create";
+        return "admin/user/create";
     }
 
     @PostMapping(value = "/admin/user/create")
@@ -79,7 +79,7 @@ public class UserController {
         }
         // validate
         if (newUserBindingResult.hasErrors()) {
-            return "/admin/user/create";
+            return "admin/user/create";
         }
 
         String avatar = this.uploadFileService.handleSaveUploadFile(file, "avatar");
@@ -98,7 +98,7 @@ public class UserController {
         model.addAttribute("newUser", currentUser);
         model.addAttribute("emailUser", currentUser.getEmail());
         model.addAttribute("avatarFile", currentUser.getAvatar());
-        return "/admin/user/update";
+        return "admin/user/update";
     }
 
     @PostMapping("/admin/user/update")
@@ -109,7 +109,7 @@ public class UserController {
         model.addAttribute("emailUser", currentUser.getEmail());
         model.addAttribute("avatarFile", currentUser.getAvatar());
         if (newUserBindingResult.hasErrors()) {
-            return "/admin/user/update";
+            return "admin/user/update";
         }
         if (currentUser != null) {
             if (file != null) {
@@ -129,7 +129,7 @@ public class UserController {
     public String getDeletePage(Model model, @PathVariable long id) {
         model.addAttribute("id", id);
         model.addAttribute("newUser", new User());
-        return "/admin/user/delete";
+        return "admin/user/delete";
     }
 
     @PostMapping("/admin/user/delete")

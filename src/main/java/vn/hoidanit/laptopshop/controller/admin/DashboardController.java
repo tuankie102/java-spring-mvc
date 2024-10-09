@@ -8,7 +8,7 @@ public class DashboardController {
 
     @GetMapping("/admin")
     public String getMethodName() {
-        return "/admin/dashboard/show";
+        return "admin/dashboard/show";
     }
 
 }

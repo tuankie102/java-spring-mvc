@@ -34,13 +34,13 @@ public class ProductController {
     public String getProductPage(Model model) {
         List<Product> products = this.productService.getAllProducts();
         model.addAttribute("products", products);
-        return "/admin/product/show";
+        return "admin/product/show";
     }
 
     @GetMapping("/admin/product/create")
     public String getCreatePage(Model model) {
         model.addAttribute("newProduct", new Product());
-        return "/admin/product/create";
+        return "admin/product/create";
     }
 
     @PostMapping(value = "/admin/product/create")
@@ -50,7 +50,7 @@ public class ProductController {
 
         // validate
         if (newProductBindingResult.hasErrors()) {
-            return "/admin/product/create";
+            return "admin/product/create";
         }
 
         String productImg = this.uploadFileService.handleSaveUploadFile(file, "product");
@@ -65,7 +65,7 @@ public class ProductController {
         Product currentProduct = this.productService.getProductById(id).get();
         model.addAttribute("newProduct", currentProduct);
         model.addAttribute("productImgOlder", currentProduct.getImage());
-        return "/admin/product/update";
+        return "admin/product/update";
     }
 
     @PostMapping("/admin/product/update")
@@ -80,7 +80,7 @@ public class ProductController {
         }
         // validate
         if (newProductBindingResult.hasErrors()) {
-            return "/admin/product/update";
+            return "admin/product/update";
         }
         if (file != null) {
             String productImgFile = this.uploadFileService.handleSaveUploadFile(file, "product");
@@ -104,7 +104,7 @@ public class ProductController {
     public String getDeletePage(Model model, @PathVariable long id) {
         model.addAttribute("id", id);
         model.addAttribute("newProduct", new Product());
-        return "/admin/product/delete";
+        return "admin/product/delete";
     }
 
     @PostMapping("/admin/product/delete")
@@ -118,7 +118,7 @@ public class ProductController {
     public String getUserDetailPage(Model model, @PathVariable long id) {
         Product product = this.productService.getProductById(id).get();
         model.addAttribute("product", product);
-        return "/admin/product/detail";
+        return "admin/product/detail";
     }
 
 }
