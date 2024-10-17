@@ -5,13 +5,18 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
+import vn.hoidanit.laptopshop.domain.Order;
+import vn.hoidanit.laptopshop.domain.OrderDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.CartDetailRepository;
 import vn.hoidanit.laptopshop.repository.CartRepository;
+import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
+import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
 
 @Service
@@ -20,13 +25,18 @@ public class ProductService {
     private final UserService userService;
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public ProductService(ProductRepository productRepository, CartRepository cartRepository,
-            CartDetailRepository cartDetailRepository, UserService userService) {
+            CartDetailRepository cartDetailRepository, UserService userService, OrderRepository orderRepository,
+            OrderDetailRepository orderDetailRepository) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
         this.cartDetailRepository = cartDetailRepository;
         this.userService = userService;
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public Product handleSaveProduct(Product Product) {
@@ -107,19 +117,55 @@ public class ProductService {
         }
     }
 
-    public CartDetail getCartDetailById(long id) {
-        return this.cartDetailRepository.findById(id).get();
+    public void handleUpdateCartBeforeCheckout(List<CartDetail> cartDetails) {
+        for (CartDetail cartDetail : cartDetails) {
+            Optional<CartDetail> cdOptional = this.cartDetailRepository.findById(cartDetail.getId());
+            CartDetail currentCartDetail = cdOptional.get();
+            currentCartDetail.setQuantity(cartDetail.getQuantity());
+            this.cartDetailRepository.save(currentCartDetail);
+        }
     }
 
-    public void deleteACartDetail(long id) {
-        this.cartDetailRepository.deleteById(id);
-    }
+    public void handlePlaceOrder(User user, HttpServletRequest request, String receiverName, String receiverAddress,
+            String receiverPhone, HttpSession session) {
 
-    public void deleteACart(long id) {
-        this.cartRepository.deleteById(id);
-    }
+        Cart cart = this.cartRepository.findCartByUser(user);
+        double totalPrice = 0;
+        cart.getCartDetails();
+        if (cart != null) {
+            List<CartDetail> cartDetails = cart.getCartDetails();
+            if (cartDetails != null) {
+                // step 0: caculate totalprice
+                for (CartDetail cd : cartDetails) {
+                    totalPrice += cd.getPrice();
+                }
+                // step 1 : create an order
+                Order order = new Order();
+                order.setUser(user);
+                order.setReceiverAddress(receiverAddress);
+                order.setReceiverName(receiverName);
+                order.setReceiverPhone(receiverPhone);
+                order.setStatus("PENDING");
+                order.setTotalPrice(totalPrice);
+                this.orderRepository.save(order);
+                // step 2: create order detail for each cart detail
+                for (CartDetail cd : cartDetails) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrder(order);
+                    orderDetail.setPrice(cd.getPrice());
+                    orderDetail.setProduct(cd.getProduct());
+                    orderDetail.setQuantity(cd.getQuantity());
+                    this.orderDetailRepository.save(orderDetail);
+                }
+                // step 3: delete cart detail and cart
+                for (CartDetail cd : cartDetails) {
+                    this.cartDetailRepository.deleteById(cd.getId());
+                }
+                this.cartRepository.deleteById(cart.getId());
+                session.setAttribute("sum", 0);
+            }
 
-    public void saveACart(Cart cart) {
-        this.cartRepository.save(cart);
+        }
+
     }
 }
