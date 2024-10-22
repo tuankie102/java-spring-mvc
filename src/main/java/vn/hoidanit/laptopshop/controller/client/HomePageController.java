@@ -4,6 +4,9 @@ import java.net.http.HttpRequest;
 import java.util.List;
 
 import org.springframework.boot.web.servlet.server.Session;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +44,9 @@ public class HomePageController {
 
     @GetMapping("/")
     public String getHomePage(Model model) {
-        List<Product> products = this.productService.getAllProducts();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> prs = this.productService.getAllProducts(pageable);
+        List<Product> products = prs.getContent();
         model.addAttribute("products", products);
 
         return "client/homepage/show";
