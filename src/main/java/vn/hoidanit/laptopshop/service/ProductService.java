@@ -20,6 +20,7 @@ import vn.hoidanit.laptopshop.repository.CartRepository;
 import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
 import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
+import vn.hoidanit.laptopshop.service.specification.ProductSpecs;
 
 @Service
 public class ProductService {
@@ -44,6 +45,11 @@ public class ProductService {
     public Product handleSaveProduct(Product Product) {
         Product testProduct = this.productRepository.save(Product);
         return testProduct;
+    }
+
+    public Page<Product> getAllProducts(Pageable pageable, String name) {
+
+        return this.productRepository.findAll(ProductSpecs.nameLike(name), pageable);
     }
 
     public Page<Product> getAllProducts(Pageable pageable) {
