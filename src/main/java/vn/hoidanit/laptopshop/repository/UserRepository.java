@@ -12,8 +12,6 @@ import vn.hoidanit.laptopshop.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     User save(User hoidanit);
 
-    List<User> findAll();
-
     List<User> findAllByEmail(String email);
 
     User findById(long id);
