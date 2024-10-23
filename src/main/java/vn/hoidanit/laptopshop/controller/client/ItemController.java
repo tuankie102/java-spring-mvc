@@ -1,6 +1,7 @@
 package vn.hoidanit.laptopshop.controller.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
 
@@ -145,12 +147,11 @@ public class ItemController {
     }
 
     @GetMapping("/products")
-    public String getProductPage(Model model, @RequestParam("page") Optional<String> pageOptional,
-            @RequestParam("name") Optional<String> nameOptional) {
+    public String getProductPage(Model model, ProductCriteriaDTO productCriteriaDTO) {
         int page = 1;
         try {
-            if (pageOptional.isPresent()) {
-                page = Integer.parseInt(pageOptional.get());
+            if (productCriteriaDTO.getPage().isPresent()) {
+                page = Integer.parseInt(productCriteriaDTO.getPage().get());
             } else {
                 // page =1
             }
@@ -158,11 +159,11 @@ public class ItemController {
             // page =1
             // TODO: handle exception
         }
-        String name = nameOptional.get();
+        Pageable pageable = PageRequest.of(page - 1, 60);
 
-        Pageable pageable = PageRequest.of(page - 1, 6);
-        Page<Product> productsPage = this.productService.getAllProducts(pageable, name);
-        List<Product> products = productsPage.getContent();
+        Page<Product> productsPage = this.productService.fetchProducts(pageable, productCriteriaDTO);
+
+        List<Product> products = productsPage.getContent() != null ? productsPage.getContent() : new ArrayList<>();
         int totalPages = productsPage.getTotalPages();
         model.addAttribute("products", products);
         model.addAttribute("currentPage", page);
