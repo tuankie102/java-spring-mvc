@@ -266,6 +266,10 @@
         const currentUrl = new URL(window.location.href);
         const searchParams = currentUrl.searchParams;
 
+        searchParams.delete('factory');
+        searchParams.delete('target');
+        searchParams.delete('price');
+
         // Add or update query parameters
         searchParams.set('page', '1');
         searchParams.set('sort', sortValue);
